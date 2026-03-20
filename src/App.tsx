@@ -551,6 +551,7 @@ export default function App() {
           line-height: 1.1;
           letter-spacing: -1.5px;
           margin: 0 0 48px;
+          color: var(--ink);
         }
         .desc {
           font-size: 16px;
