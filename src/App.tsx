@@ -81,7 +81,6 @@ function AnimatedChat() {
   const [visible, setVisible] = useState<boolean[]>(Array(CHAT_MESSAGES.length).fill(false));
 
   useEffect(() => {
-    // 컨테이너가 뷰포트에 들어오면 버블들을 순차 표시
     const container = containerRef.current;
     if (!container) return;
     const observer = new IntersectionObserver(
@@ -122,15 +121,51 @@ function AnimatedChat() {
 /* ─── 마퀴 태그 ─── */
 const SKILLS = ["React", "Vue.js", "Next.js", "Node.js", "Firebase", "AWS", "MySQL", "PostgreSQL", "HTML", "CSS", "JavaScript", "TypeScript", "Python", "Docker", "Figma", "Tailwind"];
 
+/* ─── 배너 카운터 애니메이션 ─── */
+function CountUp({ end, suffix = "" }: { end: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        let start = 0;
+        const duration = 1800;
+        const step = Math.ceil(end / (duration / 16));
+        const timer = setInterval(() => {
+          start += step;
+          if (start >= end) { setCount(end); clearInterval(timer); }
+          else setCount(start);
+        }, 16);
+        observer.disconnect();
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [end]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+}
+
 export default function App() {
   const [email, setEmail] = useState("");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [heroLoaded, setHeroLoaded] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const t = setTimeout(() => setHeroLoaded(true), 100);
+    return () => clearTimeout(t);
   }, []);
 
   const scrollTo = (id: string) => {
@@ -141,15 +176,25 @@ export default function App() {
   return (
     <div className="page">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
 
         *, *::before, *::after { box-sizing: border-box; }
+
+        :root {
+          --cream: #f8f7f4;
+          --ink: #111111;
+          --ink2: #333;
+          --muted: #999;
+          --border: #e8e4de;
+          --accent: #c8a96e;
+          --accent2: #e8d5b0;
+        }
 
         body {
           margin: 0;
           font-family: 'DM Sans', sans-serif;
-          background: #f8f7f4;
-          color: #111;
+          background: var(--cream);
+          color: var(--ink);
           overflow-x: hidden;
         }
 
@@ -165,9 +210,9 @@ export default function App() {
           transition: background .4s, backdrop-filter .4s, box-shadow .4s;
         }
         .nav.scrolled {
-          background: rgba(248,247,244,0.85);
-          backdrop-filter: blur(16px);
-          box-shadow: 0 1px 0 rgba(0,0,0,0.08);
+          background: rgba(248,247,244,0.88);
+          backdrop-filter: blur(20px);
+          box-shadow: 0 1px 0 rgba(0,0,0,0.07);
         }
         .nav-logo {
           font-family: 'Instrument Serif', serif;
@@ -187,14 +232,14 @@ export default function App() {
           letter-spacing: 0.08em;
           text-transform: uppercase;
           cursor: pointer;
-          opacity: 0.5;
+          opacity: 0.45;
           transition: opacity .2s;
         }
         .nav-links li:hover { opacity: 1; }
         .nav-cta {
           padding: 9px 20px;
-          background: #111;
-          color: #f8f7f4;
+          background: var(--ink);
+          color: var(--cream);
           border: none;
           border-radius: 100px;
           font-size: 13px;
@@ -204,154 +249,292 @@ export default function App() {
         }
         .nav-cta:hover { background: #333; transform: translateY(-1px); }
 
-        /* ── HERO ── */
+        /* ══════════════════════════════
+           ── NEW HERO BANNER ──
+        ══════════════════════════════ */
         .hero {
           min-height: 100vh;
+          display: grid;
+          grid-template-rows: 1fr auto;
+          position: relative;
+          overflow: hidden;
+          background: var(--ink);
+        }
+
+        /* 배경 노이즈 텍스처 */
+        .hero::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image:
+            radial-gradient(ellipse 80% 60% at 70% 50%, rgba(200,169,110,0.12) 0%, transparent 60%),
+            radial-gradient(ellipse 50% 80% at 20% 80%, rgba(200,169,110,0.07) 0%, transparent 50%);
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        /* 그리드 라인 배경 */
+        .hero-grid {
+          position: absolute;
+          inset: 0;
+          background-image:
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+          background-size: 80px 80px;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        /* 우상단 원형 장식 */
+        .hero-circle {
+          position: absolute;
+          top: -120px;
+          right: -120px;
+          width: 500px;
+          height: 500px;
+          border-radius: 50%;
+          border: 1px solid rgba(200,169,110,0.15);
+          pointer-events: none;
+          z-index: 0;
+        }
+        .hero-circle::after {
+          content: '';
+          position: absolute;
+          inset: 40px;
+          border-radius: 50%;
+          border: 1px solid rgba(200,169,110,0.1);
+        }
+
+        /* 좌하단 사선 텍스트 */
+        .hero-watermark {
+          position: absolute;
+          bottom: 80px;
+          right: 40px;
+          font-family: 'Instrument Serif', serif;
+          font-size: 180px;
+          font-style: italic;
+          color: rgba(255,255,255,0.025);
+          line-height: 1;
+          pointer-events: none;
+          z-index: 0;
+          letter-spacing: -4px;
+          user-select: none;
+        }
+
+        .hero-content {
+          position: relative;
+          z-index: 1;
           display: flex;
           flex-direction: column;
           justify-content: flex-end;
-          padding: 0 40px 80px;
-          position: relative;
-          overflow: hidden;
+          padding: 140px 40px 0;
         }
-        .hero-label {
-          font-size: 11px;
+
+        /* 상단 상태 배지 */
+        .hero-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 6px 14px 6px 10px;
+          border: 1px solid rgba(200,169,110,0.35);
+          border-radius: 100px;
+          font-size: 12px;
           font-weight: 500;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          color: #999;
-          margin-bottom: 24px;
+          color: var(--accent);
+          letter-spacing: 0.06em;
+          margin-bottom: 36px;
+          width: fit-content;
+          opacity: 0;
+          transform: translateY(16px);
+          transition: opacity .6s ease, transform .6s ease;
         }
+        .hero-badge.loaded { opacity: 1; transform: translateY(0); }
+        .badge-dot {
+          width: 7px; height: 7px;
+          border-radius: 50%;
+          background: var(--accent);
+          box-shadow: 0 0 0 3px rgba(200,169,110,0.25);
+          animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+          0%, 100% { box-shadow: 0 0 0 3px rgba(200,169,110,0.25); }
+          50%       { box-shadow: 0 0 0 6px rgba(200,169,110,0.1); }
+        }
+
+        /* 메인 타이틀 */
+        .hero-eyebrow {
+          font-size: 13px;
+          font-weight: 400;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.35);
+          margin-bottom: 16px;
+          opacity: 0;
+          transform: translateY(20px);
+          transition: opacity .7s .1s ease, transform .7s .1s ease;
+        }
+        .hero-eyebrow.loaded { opacity: 1; transform: translateY(0); }
+
         .hero-title {
           font-family: 'Instrument Serif', serif;
-          font-size: clamp(56px, 10vw, 120px);
-          line-height: 1;
-          letter-spacing: -2px;
-          margin: 0 0 24px;
-          overflow: hidden;
-        }
-        .hero-sub {
-          font-size: 16px;
-          color: #555;
-          max-width: 480px;
-          line-height: 1.7;
-          margin-bottom: 40px;
-          text-align:start;
-        }
-        .hero-actions {
-          display: flex;
-          align-items: center;
-          gap: 20px;
-        }
-        .btn-primary {
-          padding: 14px 32px;
-          background: #111;
-          color: #f8f7f4;
-          border: none;
-          border-radius: 100px;
-          font-size: 15px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: transform .2s, box-shadow .2s;
-        }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.2); }
-        .btn-ghost {
-          font-size: 14px;
-          color: #555;
-          text-decoration: none;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          cursor: pointer;
-          transition: color .2s;
-        }
-        .btn-ghost:hover { color: #111; }
-
-        /* hero deco */
-        .hero-deco {
-          position: absolute;
-          top: 120px; right: 40px;
-          width: 360px; height: 360px;
-          border-radius: 50%;
-          background: radial-gradient(circle at 40% 40%, rgba(99,102,241,0.18), rgba(56,189,248,0.12), transparent 70%);
-          animation: float 8s ease-in-out infinite;
-          pointer-events: none;
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-20px) scale(1.04); }
-        }
-        .hero-line {
-          position: absolute;
-          top: 0; right: 200px;
-          width: 1px; height: 60%;
-          background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.08), transparent);
-        }
-
-        /* ── SPLIT TEXT ── */
-        .split-char {
-          display: inline-block;
+          font-size: clamp(64px, 11vw, 128px);
+          line-height: 0.92;
+          letter-spacing: -3px;
+          margin: 0 0 0;
+          color: #fff;
           opacity: 0;
           transform: translateY(30px);
-          animation: charIn .6s forwards;
+          transition: opacity .8s .2s ease, transform .8s .2s ease;
         }
-        @keyframes charIn {
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .cursor {
-          animation: blink 1s infinite;
-          color: #6366f1;
-          font-weight: 300;
-        }
-        @keyframes blink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0; }
+        .hero-title.loaded { opacity: 1; transform: translateY(0); }
+
+        /* 타이틀 강조 (골드 이탤릭) */
+        .hero-title em {
+          font-style: italic;
+          color: var(--accent);
         }
 
-        /* ── MARQUEE ── */
-        .marquee-section {
-          border-top: 1px solid #e8e4de;
-          border-bottom: 1px solid #e8e4de;
-          padding: 18px 0;
-          overflow: hidden;
-          background: #fff;
-          border-radius:100px;
-        }
-        .marquee-track {
+        /* 구분선 + 서브카피 행 */
+        .hero-row {
           display: flex;
-          gap: 0;
-          animation: marquee 30s linear infinite;
-          width: max-content;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: 40px;
+          margin-top: 48px;
+          padding-bottom: 64px;
+          opacity: 0;
+          transform: translateY(24px);
+          transition: opacity .8s .5s ease, transform .8s .5s ease;
         }
-        .marquee-track:hover { animation-play-state: paused; }
-        @keyframes marquee {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
-        .marquee-item {
-          display: flex;
-          align-items: center;
-          gap: 20px;
-          padding: 0 28px;
-          font-size: 13px;
-          font-weight: 500;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-          white-space: nowrap;
-          color: #555;
-        }
-        .marquee-dot {
-          width: 4px; height: 4px;
-          border-radius: 50%;
-          background: #bbb;
+        .hero-row.loaded { opacity: 1; transform: translateY(0); }
+
+        .hero-divider {
+          width: 1px;
+          height: 80px;
+          background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.2), transparent);
           flex-shrink: 0;
         }
 
-        /* ── SECTIONS ── */
+        .hero-sub {
+          font-size: 15px;
+          color: rgba(255,255,255,0.5);
+          max-width: 360px;
+          line-height: 1.75;
+          font-weight: 300;
+        }
+
+        .hero-actions {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 16px;
+          flex-shrink: 0;
+        }
+
+        /* 배너 하단 스탯 바 */
+        .hero-stats {
+          position: relative;
+          z-index: 1;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          border-top: 1px solid rgba(255,255,255,0.08);
+          opacity: 0;
+          transform: translateY(20px);
+          transition: opacity .8s .7s ease, transform .8s .7s ease;
+        }
+        .hero-stats.loaded { opacity: 1; transform: translateY(0); }
+
+        .stat-item {
+          padding: 32px 40px;
+          border-right: 1px solid rgba(255,255,255,0.08);
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .stat-item:last-child { border-right: none; }
+
+        .stat-number {
+          font-family: 'Instrument Serif', serif;
+          font-size: 40px;
+          color: #fff;
+          line-height: 1;
+          letter-spacing: -1px;
+        }
+        .stat-label {
+          font-size: 12px;
+          color: rgba(255,255,255,0.35);
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+
+        /* 버튼 */
+        .btn-primary {
+          padding: 14px 28px;
+          background: var(--cream);
+          color: var(--ink);
+          border: none;
+          border-radius: 100px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: transform .2s, background .2s, box-shadow .2s;
+          font-family: 'DM Sans', sans-serif;
+          letter-spacing: -0.01em;
+        }
+        .btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .btn-ghost {
+          font-size: 14px;
+          color: rgba(255,255,255,0.5);
+          cursor: pointer;
+          transition: color .2s;
+          letter-spacing: 0.02em;
+        }
+        .btn-ghost:hover { color: rgba(255,255,255,0.9); }
+
+        /* 스크롤 인디케이터 */
+        .scroll-hint {
+          position: absolute;
+          bottom: 48px;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          z-index: 2;
+          opacity: 0;
+          animation: fadeInUp 1s 1.4s forwards;
+        }
+        .scroll-hint span {
+          font-size: 10px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.25);
+        }
+        .scroll-line {
+          width: 1px;
+          height: 40px;
+          background: linear-gradient(to bottom, rgba(255,255,255,0.25), transparent);
+          animation: scrollDown 2s 1.4s infinite;
+        }
+        @keyframes scrollDown {
+          0%   { transform: scaleY(0); transform-origin: top; }
+          50%  { transform: scaleY(1); transform-origin: top; }
+          51%  { transform: scaleY(1); transform-origin: bottom; }
+          100% { transform: scaleY(0); transform-origin: bottom; }
+        }
+        @keyframes fadeInUp {
+          to { opacity: 1; }
+        }
+
+        /* ── SECTION COMMONS ── */
         section {
-          max-width: 1100px;
-          margin: auto;
           padding: 120px 40px;
+          max-width: 1200px;
+          margin: 0 auto;
           scroll-margin-top: 72px;
         }
         .section-label {
@@ -359,86 +542,55 @@ export default function App() {
           font-weight: 600;
           letter-spacing: 0.16em;
           text-transform: uppercase;
-          color: #aaa;
-          margin-bottom: 48px;
-          display: flex;
-          align-items: center;
-          gap: 12px;
+          color: var(--muted);
+          margin: 0 0 20px;
         }
-        .section-label::after {
-          content: '';
-          flex: 1;
-          height: 1px;
-          background: #e0ddd8;
-        }
-        h2 {
+        section h2 {
           font-family: 'Instrument Serif', serif;
-          font-size: clamp(32px, 5vw, 52px);
-          letter-spacing: -1px;
-          margin: 0 0 24px;
+          font-size: clamp(36px, 5vw, 56px);
           line-height: 1.1;
-          color: #0a0a0a;
+          letter-spacing: -1.5px;
+          margin: 0 0 48px;
         }
         .desc {
-          color: #555;
-          text-align:start;
-          line-height: 1.8;
           font-size: 16px;
-          max-width: 560px;
+          color: #555;
+          line-height: 1.75;
+          max-width: 540px;
+          margin: 0;
         }
 
         /* ── SERVICES ── */
-        @keyframes cardGradient {
-          0%   { background: linear-gradient(135deg, #e8e4f8, #d4eeff, #f0e4f8); }
-          33%  { background: linear-gradient(135deg, #d4eeff, #f0e4f8, #e8e4f8); }
-          66%  { background: linear-gradient(135deg, #f0e4f8, #e8e4f8, #d4eeff); }
-          100% { background: linear-gradient(135deg, #e8e4f8, #d4eeff, #f0e4f8); }
-        }
         .services-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 2px;
+          border-top: 2px solid var(--ink);
           margin-top: 48px;
-          border: 2px solid #111;
         }
         .service-card {
           padding: 40px 32px;
-          cursor: default;
-          border-right: 2px solid #111;
-          animation: cardGradient 6s ease-in-out infinite;
-          transition: background 0.5s ease, color 0.3s ease;
-          background-size: 200% 200%;
+          border-right: 2px solid var(--ink);
+          transition: background .25s;
         }
-        .service-card:nth-child(1) { animation-delay: 0s; }
-        .service-card:nth-child(2) { animation-delay: -2s; }
-        .service-card:nth-child(3) { animation-delay: -4s; }
         .service-card:last-child { border-right: none; }
-        .service-card:hover {
-          animation: none;
-          background: #111 !important;
-          color: #f8f7f4;
-        }
-        .service-card:hover .service-desc { color: #aaa; }
+        .service-card:hover { background: rgba(0,0,0,0.03); }
         .service-num {
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.12em;
-          color: #888;
-          margin-bottom: 24px;
-          transition: color 0.3s;
-        }
-        .service-card:hover .service-num { color: #555; }
-        .service-title {
           font-family: 'Instrument Serif', serif;
-          font-size: 26px;
-          margin: 0 0 12px;
-          transition: color 0.3s;
+          font-size: 13px;
+          color: var(--muted);
+          margin: 0 0 24px;
+        }
+        .service-title {
+          font-size: 20px;
+          font-weight: 600;
+          margin: 0 0 16px;
+          letter-spacing: -0.3px;
         }
         .service-desc {
-          font-size: 14px;
+          font-size: 15px;
           color: #666;
-          line-height: 1.6;
-          transition: color 0.3s;
+          line-height: 1.7;
+          margin: 0;
         }
 
         /* ── ABOUT ── */
@@ -449,31 +601,73 @@ export default function App() {
           align-items: center;
         }
         .about-visual {
-          aspect-ratio: 1;
-          background: linear-gradient(135deg, #e8e4f8, #d4eeff, #f0e4f8);
-          border-radius: 24px;
-          display: flex;
-          justify-content: center;
-          font-family: 'Instrument Serif', serif;
-          font-size: 80px;
-          color: rgba(0,0,0,0.08);
-          letter-spacing: -4px;
+          aspect-ratio: 3/4;
+          background: #e8e4de;
+          border-radius: 4px;
           overflow: hidden;
           position: relative;
         }
-        .about-visual-inner {
-          position: absolute;
-          inset: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 96px;
-          opacity: 0.12;
+        .about-visual img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
         }
 
+        /* ── MARQUEE ── */
+        .marquee-section {
+          overflow: hidden;
+          border-top: 1px solid var(--border);
+          border-bottom: 1px solid var(--border);
+          padding: 24px 0;
+          margin-top: 48px;
+        }
+        .marquee-track {
+          display: flex;
+          gap: 0;
+          animation: marquee 28s linear infinite;
+          width: max-content;
+        }
+        .marquee-track:hover { animation-play-state: paused; }
+        @keyframes marquee {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+        .marquee-item {
+          display: flex;
+          align-items: center;
+          font-size: 14px;
+          font-weight: 500;
+          padding: 0 28px;
+          white-space: nowrap;
+          color: #444;
+          letter-spacing: 0.02em;
+        }
+        .marquee-dot {
+          width: 4px; height: 4px;
+          border-radius: 50%;
+          background: var(--accent);
+          margin-left: 28px;
+        }
+
+        /* ── SPLIT TEXT ── */
+        .split-char {
+          display: inline-block;
+          animation: charIn .6s cubic-bezier(.22,1,.36,1) both;
+        }
+        @keyframes charIn {
+          from { opacity: 0; transform: translateY(40%); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .cursor {
+          display: inline-block;
+          animation: blink 1s step-end infinite;
+          color: var(--accent);
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
         /* ── CHAT ── */
-        .chat { display: flex; flex-direction: column; gap: 20px;  }
-        .chat-row { display: flex; }
+        .chat { display: flex; flex-direction: column; gap: 20px; }
+        .chat-row { display: flex; opacity: 0; }
         .chat-row.client { justify-content: flex-start; }
         .chat-row.me { justify-content: flex-end; }
 
@@ -485,14 +679,8 @@ export default function App() {
           from { opacity: 0; transform: translateX(24px) scale(0.94); }
           to   { opacity: 1; transform: translateX(0) scale(1); }
         }
-
-        .chat-row { opacity: 0; }
-        .chat-row.animate-left {
-          animation: bubbleInLeft 0.55s cubic-bezier(.22,1,.36,1) forwards;
-        }
-        .chat-row.animate-right {
-          animation: bubbleInRight 0.55s cubic-bezier(.22,1,.36,1) forwards;
-        }
+        .chat-row.animate-left  { animation: bubbleInLeft  0.55s cubic-bezier(.22,1,.36,1) forwards; }
+        .chat-row.animate-right { animation: bubbleInRight 0.55s cubic-bezier(.22,1,.36,1) forwards; }
 
         .bubble {
           max-width: 72%;
@@ -503,15 +691,12 @@ export default function App() {
           transition: transform .2s;
         }
         .bubble:hover { transform: scale(1.01); }
-        .client .bubble { background: #fff; border: 1px solid #e8e4de; box-shadow: 0 2px 12px rgba(0,0,0,0.05); text-align:start; }
-        .me .bubble { background: #111; color: #f8f7f4; text-align:start;}
+        .client .bubble { background: #fff; border: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.05); text-align: start; }
+        .me .bubble     { background: var(--ink); color: var(--cream); text-align: start; }
 
         /* ── CONTACT ── */
         .contact-wrap { margin-top: 48px; }
-        .contact-box {
-          display: flex;
-          gap: 10px;
-        }
+        .contact-box  { display: flex; gap: 10px; }
         input {
           flex: 1;
           padding: 13px 18px;
@@ -524,13 +709,27 @@ export default function App() {
           font-family: 'DM Sans', sans-serif;
         }
         input:focus {
-          border-color: #111;
+          border-color: var(--ink);
           box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
         }
+        .btn-contact {
+          padding: 13px 28px;
+          background: var(--ink);
+          color: var(--cream);
+          border: none;
+          border-radius: 100px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background .2s, transform .2s;
+          font-family: 'DM Sans', sans-serif;
+          white-space: nowrap;
+        }
+        .btn-contact:hover { background: #333; transform: translateY(-1px); }
 
         /* ── FOOTER ── */
         footer {
-          border-top: 1px solid #e8e4de;
+          border-top: 1px solid var(--border);
           padding: 40px;
           display: flex;
           justify-content: space-between;
@@ -545,39 +744,47 @@ export default function App() {
           transform: translateY(48px);
           transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1);
         }
-        .fade-section.visible {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        .fade-section.visible { opacity: 1; transform: translateY(0); }
 
-        /* ── MOBILE ── */
+        /* ── MOBILE NAV ── */
         .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
-        .hamburger span { display: block; width: 22px; height: 2px; background: #111; margin: 5px 0; transition: .3s; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: var(--ink); margin: 5px 0; transition: .3s; }
 
+        /* ── RESPONSIVE ── */
         @media (max-width: 900px) {
-          .services-grid { grid-template-columns: 1fr; }
-          .service-card { border-right: none; border-bottom: 2px solid #111; }
+          .services-grid   { grid-template-columns: 1fr; }
+          .service-card    { border-right: none; border-bottom: 2px solid var(--ink); }
           .service-card:last-child { border-bottom: none; }
-          .about-layout { grid-template-columns: 1fr; gap: 40px; }
-          .about-visual { display: none; }
+          .about-layout    { grid-template-columns: 1fr; gap: 40px; }
+          .about-visual    { display: none; }
+          .hero-stats      { grid-template-columns: repeat(3,1fr); }
         }
 
         @media (max-width: 768px) {
-          .nav { padding: 16px 24px; }
+          .nav            { padding: 16px 24px; }
           .nav-links, .nav-cta { display: none; }
-          .hamburger { display: block; }
-          .hero { padding: 0 24px 60px; }
-          section { padding: 80px 24px; }
-          .contact-box { flex-direction: column; }
-          input { border-radius: 12px; }
-          .btn-primary { border-radius: 12px; }
-          footer { flex-direction: column; gap: 12px; text-align: center; }
-          .bubble { max-width: 85%; font-size: 14px; }
+          .hamburger      { display: block; }
+          .hero-content   { padding: 120px 24px 0; }
+          .hero-row       { flex-direction: column; align-items: flex-start; padding-bottom: 0; }
+          .hero-actions   { align-items: flex-start; flex-direction: row; }
+          .hero-divider   { display: none; }
+          .hero-stats     { grid-template-columns: repeat(3,1fr); }
+          .stat-item      { padding: 24px 20px; }
+          .stat-number    { font-size: 28px; }
+          section         { padding: 80px 24px; }
+          .contact-box    { flex-direction: column; }
+          input           { border-radius: 12px; }
+          .btn-contact    { border-radius: 12px; }
+          footer          { flex-direction: column; gap: 12px; text-align: center; }
+          .bubble         { max-width: 85%; font-size: 14px; }
+          .hero-watermark { font-size: 100px; bottom: 60px; }
+          .scroll-hint    { display: none; }
         }
 
         @media (max-width: 480px) {
-          .hero-title { letter-spacing: -1px; }
-          .hero-deco { width: 240px; height: 240px; right: -40px; }
+          .hero-title   { letter-spacing: -2px; }
+          .hero-stats   { grid-template-columns: 1fr 1fr; }
+          .stat-item:last-child { grid-column: 1/-1; border-right: none; border-top: 1px solid rgba(255,255,255,0.08); }
         }
       `}</style>
 
@@ -595,22 +802,79 @@ export default function App() {
         </button>
       </nav>
 
-      {/* ─── HERO ─── */}
+      {/* ══════════════════════
+          ─── NEW HERO BANNER ───
+      ══════════════════════ */}
       <div className="hero" id="hero">
-        <div className="hero-deco" />
-        <div className="hero-line" />
-        <div>
-          <p className="hero-label">Web Developer · 경력 4년</p>
-          <h1 className="hero-title">
-            <SplitText text="YS Lab" />
-          </h1>
-          <p className="hero-sub">
-            <TypeWriter text="디자인 경험을 기반으로 웹·앱 인터페이스를 구현하는 프론트엔드 개발자입니다. 디자인의 의도를 정확하게 코드로 옮기고, 실제 서비스에서 통하는 UI를 만드는 것이 강점입니다." delay={600} />
-          </p>
-          <div className="hero-actions">
-            <button className="btn-primary" onClick={() => scrollTo("contact")}>프로젝트 문의</button>
-            <span className="btn-ghost" onClick={() => scrollTo("services")}>서비스 보기 →</span>
+        {/* 배경 장식 */}
+        <div className="hero-grid" />
+        <div className="hero-circle" />
+        <div className="hero-watermark">YSLab</div>
+
+        {/* 메인 컨텐츠 */}
+        <div className="hero-content">
+          {/* 상태 배지 */}
+          <div className={`hero-badge${heroLoaded ? " loaded" : ""}`}>
+            <span className="badge-dot" />
+            현재 프로젝트 수락 가능
           </div>
+
+          {/* 아이브로우 */}
+          <p className={`hero-eyebrow${heroLoaded ? " loaded" : ""}`}>
+            Fullstack Web Developer · Freelance
+          </p>
+
+          {/* 메인 타이틀 */}
+          <h1 className={`hero-title${heroLoaded ? " loaded" : ""}`}>
+            Design<br />
+            meets <em>Code.</em>
+          </h1>
+
+          {/* 서브 + 액션 행 */}
+          <div className={`hero-row${heroLoaded ? " loaded" : ""}`}>
+            <div className="hero-divider" />
+            <p className="hero-sub">
+              디자이너 출신 프론트엔드 개발자.<br />
+              기획 의도가 화면에 그대로 살아나는<br />
+              웹·앱 서비스를 함께 만들어드립니다.
+            </p>
+            <div className="hero-actions">
+              <button className="btn-primary" onClick={() => scrollTo("contact")}>
+                프로젝트 문의하기 →
+              </button>
+              <span className="btn-ghost" onClick={() => scrollTo("services")}>
+                서비스 살펴보기
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* 하단 스탯 바 */}
+        <div className={`hero-stats${heroLoaded ? " loaded" : ""}`}>
+          <div className="stat-item">
+            <div className="stat-number">
+              <CountUp end={4} suffix="+" />
+            </div>
+            <div className="stat-label">Years Experience</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-number">
+              <CountUp end={30} suffix="+" />
+            </div>
+            <div className="stat-label">Projects Delivered</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-number">
+              <CountUp end={16} />
+            </div>
+            <div className="stat-label">Tech Stack</div>
+          </div>
+        </div>
+
+        {/* 스크롤 힌트 */}
+        <div className="scroll-hint">
+          <span>scroll</span>
+          <div className="scroll-line" />
         </div>
       </div>
 
@@ -637,7 +901,7 @@ export default function App() {
 
       {/* ─── ABOUT ─── */}
       <section id="about" style={{ background: "#fff", maxWidth: "100%", padding: "120px 0", scrollMarginTop: "72px" }}>
-        <div style={{ maxWidth: 1100, margin: "auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1200, margin: "auto", padding: "0 40px" }}>
           <FadeSection>
             <p className="section-label">About</p>
             <div className="about-layout">
@@ -654,7 +918,7 @@ export default function App() {
                 </p>
               </div>
               <div className="about-visual">
-                   <img src="/profile.jpg" alt="profile" />
+                <img src="/profile.jpg" alt="profile" />
               </div>
             </div>
           </FadeSection>
@@ -667,24 +931,21 @@ export default function App() {
           <p className="section-label">Skills</p>
           <h2>사용하는 기술들</h2>
         </FadeSection>
-            {/* ─── MARQUEE ─── */}
-      <div className="marquee-section">
-        <div className="marquee-track">
-          {[...SKILLS, ...SKILLS].map((s, i) => (
-            <div className="marquee-item" key={i}>
-              {s}
-              <span className="marquee-dot" />
-            </div>
-          ))}
+        <div className="marquee-section">
+          <div className="marquee-track">
+            {[...SKILLS, ...SKILLS].map((s, i) => (
+              <div className="marquee-item" key={i}>
+                {s}
+                <span className="marquee-dot" />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
       </section>
-
-  
 
       {/* ─── CHAT / QnA ─── */}
       <section style={{ background: "#fff", maxWidth: "100%", padding: "120px 0" }}>
-        <div style={{ maxWidth: 1100, margin: "auto", padding: "0 40px" }}>
+        <div style={{ maxWidth: 1200, margin: "auto", padding: "0 40px" }}>
           <FadeSection>
             <p className="section-label">Q & A</p>
             <h2>자주 묻는 것들</h2>
@@ -706,7 +967,7 @@ export default function App() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="이메일 주소를 입력해 주세요"
               />
-              <button className="btn-primary">문의하기</button>
+              <button className="btn-contact">문의하기</button>
             </div>
           </div>
         </FadeSection>
@@ -714,6 +975,7 @@ export default function App() {
 
       <footer>
         <span>© {new Date().getFullYear()} YS Lab. All rights reserved.</span>
+        <span style={{ color: "#ccc" }}>Designed & Built by YS Lab</span>
       </footer>
     </div>
   );
