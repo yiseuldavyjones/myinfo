@@ -72,7 +72,7 @@ const CHAT_MESSAGES = [
   { side: "client", text: "모바일에서도 잘 보이게 만들 수 있나요?" },
   { side: "me",     text: "네. 모든 웹사이트는 모바일과 PC에서 모두 잘 보이도록 반응형으로 제작합니다." },
   { side: "client", text: "디자인도 같이 진행 가능한가요?" },
-  { side: "me",     text: "디자이너 출신이라 웹·앱 디자인과 개발을 함께 진행할 수 있습니다." },
+  { side: "me",     text: "디자이너 출신이라 웹·앱 디자인과 프론트엔드 개발을 함께 진행할 수 있습니다." },
 ];
 
 function AnimatedChat() {
@@ -152,7 +152,6 @@ function CountUp({ end, suffix = "" }: { end: number; suffix?: string }) {
 }
 
 export default function App() {
-  const [email, setEmail] = useState("");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [heroLoaded, setHeroLoaded] = useState(false);
@@ -696,7 +695,7 @@ export default function App() {
         .me .bubble     { background: var(--ink); color: var(--cream); text-align: start; }
 
         /* ── CONTACT ── */
-        .contact-wrap { margin-top: 24px; }
+        .contact-wrap { margin-top: 48px; }
         .contact-box  { display: flex; gap: 10px; }
         input {
           flex: 1;
@@ -727,6 +726,47 @@ export default function App() {
           white-space: nowrap;
         }
         .btn-contact:hover { background: #333; transform: translateY(-1px); }
+
+        /* ── SOOMGO BUTTON ── */
+        .soomgo-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 18px 32px;
+          background: var(--ink);
+          color: var(--cream);
+          border-radius: 100px;
+          font-size: 16px;
+          font-weight: 600;
+          text-decoration: none;
+          font-family: 'DM Sans', sans-serif;
+          transition: transform .25s, box-shadow .25s, background .25s;
+          letter-spacing: -0.01em;
+        }
+        .soomgo-btn:hover {
+          background: #222;
+          transform: translateY(-3px);
+          box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+        }
+        .soomgo-icon {
+          display: flex;
+          align-items: center;
+          color: var(--accent);
+        }
+        .soomgo-arrow {
+          font-size: 18px;
+          color: var(--accent);
+          transition: transform .25s;
+        }
+        .soomgo-btn:hover .soomgo-arrow {
+          transform: translate(3px, -3px);
+        }
+        .contact-note {
+          margin: 20px 0 0;
+          font-size: 13px;
+          color: var(--muted);
+          letter-spacing: 0.04em;
+        }
 
         /* ── FOOTER ── */
         footer {
@@ -835,7 +875,7 @@ export default function App() {
           <div className={`hero-row${heroLoaded ? " loaded" : ""}`}>
             <div className="hero-divider" />
             <p className="hero-sub">
-              디자이너 출신 웹 개발자.<br />
+              디자이너 출신 프론트엔드 개발자.<br />
               기획 의도가 화면에 그대로 살아나는<br />
               웹·앱 서비스를 함께 만들어드립니다.
             </p>
@@ -888,7 +928,7 @@ export default function App() {
             {[
               { num: "01", title: "웹사이트 제작", desc: "기업 홈페이지, 랜딩페이지 제작. 브랜드 아이덴티티에 맞는 디자인과 개발을 함께 진행합니다." },
               { num: "02", title: "앱 UI 구현", desc: "모바일 앱 인터페이스 구현. 디자이너 출신 개발자로서 픽셀 퍼펙트한 구현을 목표합니다." },
-              { num: "03", title: "풀스택 개발", desc: "React 기반 웹 서비스 개발. Firebase, 상태관리, API 연동까지 가능합니다." },
+              { num: "03", title: "프론트엔드 개발", desc: "React 기반 웹 서비스 개발. Firebase, 상태관리, API 연동까지 풀스택에 가까운 프론트 개발." },
             ].map((s) => (
               <div className="service-card" key={s.num}>
                 <p className="service-num">{s.num}</p>
@@ -909,7 +949,7 @@ export default function App() {
               <div>
                 <h2>디자인과 개발,<br />둘 다 합니다</h2>
                 <p className="desc">
-                  디자이너로 커리어를 시작해 현재 웹 개발자로 일하고 있습니다.
+                  디자이너로 커리어를 시작해 현재 프론트엔드 개발자로 일하고 있습니다.
                   디자인과 개발을 모두 이해하는 경험을 바탕으로 UI 완성도를 높이고
                   사용자 경험을 개선하는 프론트엔드 개발을 진행하고 있습니다.
                 </p>
@@ -960,16 +1000,34 @@ export default function App() {
         <FadeSection>
           <p className="section-label">Contact</p>
           <h2>프로젝트 이야기를<br />시작해봐요</h2>
-          <p className="desc">숨고로 편하게 연락 주세요. 24시간 내 답변드립니다.</p>
+          <p className="desc">
+            간단한 내용만 남겨주셔도 됩니다.<br />
+            숨고를 통해 빠르게 연락드릴게요.
+          </p>
           <div className="contact-wrap">
-            <div className="contact-box">
-              <button className="btn-contact">숨고로 문의하기</button>
-            </div>
+            <a
+              className="soomgo-btn"
+              href="https://soomgo.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="soomgo-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.8"/>
+                  <path d="M8 12h8M13 9l3 3-3 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </span>
+              숨고에서 문의하기
+              <span className="soomgo-arrow">↗</span>
+            </a>
+            <p className="contact-note">평균 응답시간 · 24시간 이내</p>
           </div>
         </FadeSection>
       </section>
+
       <footer>
         <span>© {new Date().getFullYear()} YS Lab. All rights reserved.</span>
+        <span style={{ color: "#ccc" }}>Designed & Built by YS Lab</span>
       </footer>
     </div>
   );
