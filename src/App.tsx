@@ -1224,7 +1224,6 @@ export default function App() {
             ].map((s) => (
               <div className="service-card" key={s.num}>
                 <p className="service-num">{s.num}</p>
-                <div className="service-icon" style={{ background: s.bg }}>{s.icon}</div>
                 <h3 className="service-title">{s.title}</h3>
                 <p className="service-desc">{s.desc}</p>
                 <span className="service-tag">{s.tag}</span>
@@ -1302,7 +1301,7 @@ export default function App() {
               </div>
               <div className="about-visual">
                 <img src="/profile.jpg" alt="YS Lab 프로필" />
-                <span className="about-visual-tag">Designer × Developer ✦</span>
+                <span className="about-visual-tag">Designer × Developer ✦ Yiseul Kim</span>
               </div>
             </div>
           </FadeSection>
@@ -1332,7 +1331,7 @@ export default function App() {
         <div className="qna-section-inner">
           <FadeSection>
             <p className="section-label">Q & A</p>
-            <h2>자주 묻는 <em>것들</em></h2>
+            <h2>자주 묻는것들</h2>
             <AnimatedChat />
           </FadeSection>
         </div>
@@ -1366,7 +1365,6 @@ export default function App() {
       <footer>
         <span className="footer-logo">YS Lab</span>
         <span>© {new Date().getFullYear()} YS Lab. All rights reserved.</span>
-        <span style={{ color: "#ccc" }}>Designed & Built with 💜</span>
       </footer>
     </div>
   );
