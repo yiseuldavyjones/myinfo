@@ -129,163 +129,92 @@ function MockupBrowser({ children, accent }: { children: React.ReactNode; accent
   );
 }
 
-/* ─── 프로젝트 목업 1: 쇼핑몰 ─── */
-function ShopMockup() {
+
+/* ─── 이미지 목업 ─── */
+function ImageMockup({ src }: { src: string }) {
   return (
-    <div style={{ background: "#fff", height: "100%", fontFamily: "sans-serif", overflow: "hidden" }}>
-      <div style={{ background: "linear-gradient(135deg, #FF6B9D, #FF8E53)", padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ color: "#fff", fontWeight: 700, fontSize: 13 }}>✦ BLOOM SHOP</span>
-        <div style={{ display: "flex", gap: 8 }}>
-          {["홈", "컬렉션", "NEW"].map(t => <span key={t} style={{ color: "rgba(255,255,255,0.8)", fontSize: 10 }}>{t}</span>)}
-        </div>
-        <span style={{ color: "#fff", fontSize: 12 }}>🛍 3</span>
-      </div>
-      <div style={{ background: "linear-gradient(180deg, #FFF0F5 0%, #fff 100%)", padding: "16px 16px 8px" }}>
-        <div style={{ background: "linear-gradient(135deg, #FF6B9D, #C850C0)", borderRadius: 12, padding: "20px 16px", color: "#fff", marginBottom: 12 }}>
-          <div style={{ fontSize: 10, opacity: 0.8, marginBottom: 4 }}>NEW ARRIVAL</div>
-          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 2 }}>봄 컬렉션 2025</div>
-          <div style={{ fontSize: 10, opacity: 0.7, marginBottom: 12 }}>트렌디한 스타일을 만나보세요</div>
-          <div style={{ background: "#fff", color: "#FF6B9D", fontSize: 9, fontWeight: 700, padding: "5px 12px", borderRadius: 20, display: "inline-block" }}>SHOP NOW →</div>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
-          {[
-            { name: "플로럴 원피스", price: "59,000", color: "#FFD6E7", emoji: "🌸" },
-            { name: "린넨 자켓", price: "89,000", color: "#D6E8FF", emoji: "👔" },
-            { name: "슬링 백", price: "45,000", color: "#D6FFE8", emoji: "👜" },
-          ].map(item => (
-            <div key={item.name} style={{ borderRadius: 8, overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
-              <div style={{ background: item.color, height: 60, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>{item.emoji}</div>
-              <div style={{ padding: "6px 6px 8px" }}>
-                <div style={{ fontSize: 9, fontWeight: 600, color: "#333" }}>{item.name}</div>
-                <div style={{ fontSize: 9, color: "#FF6B9D", fontWeight: 700 }}>₩{item.price}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    <img
+      src={src}
+      alt="project screenshot"
+      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }}
+    />
   );
 }
-
-/* ─── 프로젝트 목업 2: SaaS 대시보드 ─── */
-function DashboardMockup() {
-  return (
-    <div style={{ background: "#0F0F23", height: "100%", fontFamily: "sans-serif", overflow: "hidden", display: "flex" }}>
-      <div style={{ width: 48, background: "#1a1a35", display: "flex", flexDirection: "column", alignItems: "center", paddingTop: 16, gap: 16 }}>
-        <div style={{ width: 28, height: 28, borderRadius: 8, background: "linear-gradient(135deg, #7C3AED, #4F46E5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12 }}>✦</div>
-        {["📊", "👥", "💰", "⚙️"].map((icon, i) => (
-          <div key={i} style={{ fontSize: 14, opacity: i === 0 ? 1 : 0.4, cursor: "pointer" }}>{icon}</div>
-        ))}
-      </div>
-      <div style={{ flex: 1, padding: "12px 14px", overflowY: "auto" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-          <div>
-            <div style={{ color: "#fff", fontWeight: 700, fontSize: 12 }}>Analytics</div>
-            <div style={{ color: "#666", fontSize: 9 }}>2025년 1월 리포트</div>
-          </div>
-          <div style={{ background: "#7C3AED", color: "#fff", fontSize: 8, padding: "4px 10px", borderRadius: 20 }}>리포트 내보내기</div>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginBottom: 10 }}>
-          {[
-            { label: "총 매출", value: "₩12.4M", change: "+18%", up: true, color: "#7C3AED" },
-            { label: "신규 유저", value: "2,841", change: "+32%", up: true, color: "#06B6D4" },
-            { label: "전환율", value: "4.7%", change: "-0.3%", up: false, color: "#F59E0B" },
-            { label: "재방문", value: "68%", change: "+5%", up: true, color: "#10B981" },
-          ].map(stat => (
-            <div key={stat.label} style={{ background: "#1a1a35", borderRadius: 8, padding: "8px 10px", borderLeft: `3px solid ${stat.color}` }}>
-              <div style={{ color: "#666", fontSize: 8, marginBottom: 2 }}>{stat.label}</div>
-              <div style={{ color: "#fff", fontWeight: 700, fontSize: 13 }}>{stat.value}</div>
-              <div style={{ color: stat.up ? "#10B981" : "#EF4444", fontSize: 8 }}>{stat.change}</div>
-            </div>
-          ))}
-        </div>
-        <div style={{ background: "#1a1a35", borderRadius: 8, padding: 10 }}>
-          <div style={{ color: "#999", fontSize: 8, marginBottom: 8 }}>주간 매출 추이</div>
-          <div style={{ display: "flex", alignItems: "flex-end", gap: 4, height: 50 }}>
-            {[35, 55, 40, 70, 60, 85, 75].map((h, i) => (
-              <div key={i} style={{ flex: 1, height: `${h}%`, background: i === 5 ? "linear-gradient(to top, #7C3AED, #A855F7)" : "#2a2a50", borderRadius: "3px 3px 0 0", transition: "height 0.3s" }} />
-            ))}
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
-            {["월", "화", "수", "목", "금", "토", "일"].map(d => (
-              <div key={d} style={{ color: "#444", fontSize: 7, textAlign: "center", flex: 1 }}>{d}</div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── 프로젝트 목업 3: 예약 플랫폼 ─── */
-function BookingMockup() {
-  return (
-    <div style={{ background: "#F0FFF4", height: "100%", fontFamily: "sans-serif", overflow: "hidden" }}>
-      <div style={{ background: "linear-gradient(135deg, #059669, #10B981)", padding: "12px 16px" }}>
-        <div style={{ color: "#fff", fontWeight: 700, fontSize: 13, marginBottom: 2 }}>🌿 GREENSTAY</div>
-        <div style={{ color: "rgba(255,255,255,0.7)", fontSize: 9 }}>친환경 숙소 예약 플랫폼</div>
-      </div>
-      <div style={{ padding: 12 }}>
-        <div style={{ background: "#fff", borderRadius: 12, padding: 12, boxShadow: "0 4px 20px rgba(5,150,105,0.1)", marginBottom: 10 }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: "#059669", marginBottom: 8 }}>✦ 어디로 떠나세요?</div>
-          <div style={{ display: "flex", gap: 6, marginBottom: 6 }}>
-            <div style={{ flex: 1, background: "#F0FFF4", borderRadius: 8, padding: "6px 8px", fontSize: 9, color: "#333", border: "1px solid #A7F3D0" }}>📍 제주도</div>
-            <div style={{ flex: 1, background: "#F0FFF4", borderRadius: 8, padding: "6px 8px", fontSize: 9, color: "#333", border: "1px solid #A7F3D0" }}>📅 3월 25 - 27</div>
-          </div>
-          <div style={{ background: "linear-gradient(135deg, #059669, #10B981)", borderRadius: 8, padding: "7px 0", textAlign: "center", color: "#fff", fontSize: 10, fontWeight: 700 }}>숙소 검색하기 →</div>
-        </div>
-        <div style={{ display: "flex", gap: 6, marginBottom: 8, overflowX: "auto" }}>
-          {["🌊 해변", "🏔 산", "🌿 숲", "🏙 도심"].map((t, i) => (
-            <div key={t} style={{ background: i === 0 ? "#059669" : "#fff", color: i === 0 ? "#fff" : "#666", fontSize: 9, padding: "4px 10px", borderRadius: 20, whiteSpace: "nowrap", border: "1px solid #D1FAE5", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>{t}</div>
-          ))}
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-          {[
-            { name: "바다뷰 펜션", loc: "제주 서귀포", price: "180,000", emoji: "🏠", color: "#ECFDF5" },
-            { name: "오션 글램핑", loc: "제주 한림", price: "230,000", emoji: "⛺", color: "#ECFDF5" },
-          ].map(item => (
-            <div key={item.name} style={{ background: "#fff", borderRadius: 10, overflow: "hidden", boxShadow: "0 2px 10px rgba(0,0,0,0.06)" }}>
-              <div style={{ background: item.color, height: 52, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, borderBottom: "1px solid #D1FAE5" }}>{item.emoji}</div>
-              <div style={{ padding: "6px 8px" }}>
-                <div style={{ fontSize: 9, fontWeight: 700, color: "#111", marginBottom: 1 }}>{item.name}</div>
-                <div style={{ fontSize: 8, color: "#888", marginBottom: 3 }}>{item.loc}</div>
-                <div style={{ fontSize: 10, fontWeight: 700, color: "#059669" }}>₩{item.price}<span style={{ fontSize: 7, fontWeight: 400, color: "#999" }}>/박</span></div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── 프로젝트 목업 4: 포트폴리오 사이트 ─── */
 function PortfolioMockup() {
   return (
-    <div style={{ background: "#0A0A0A", height: "100%", fontFamily: "sans-serif", overflow: "hidden" }}>
-      <div style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #1f1f1f" }}>
-        <span style={{ color: "#fff", fontWeight: 700, fontSize: 12, fontStyle: "italic" }}>Kim Studio</span>
-        <div style={{ display: "flex", gap: 10 }}>
-          {["Work", "About", "Contact"].map(t => <span key={t} style={{ color: "#555", fontSize: 9 }}>{t}</span>)}
+    <div style={{ background: "#0A0A0A", height: "100%", fontFamily: "'Plus Jakarta Sans', sans-serif", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+
+      {/* NAV */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 18px", borderBottom: "1px solid #1e1e1e" }}>
+        <span style={{ color: "#fff", fontWeight: 700, fontSize: 12, fontStyle: "italic", fontFamily: "serif" }}>Kim Studio</span>
+        <div style={{ display: "flex", gap: 14 }}>
+          {["Work", "About", "Contact"].map(t => (
+            <span key={t} style={{ color: "#555", fontSize: 9, fontWeight: 600, letterSpacing: "0.08em" }}>{t}</span>
+          ))}
         </div>
+        <div style={{ background: "#fff", color: "#000", fontSize: 8, fontWeight: 700, padding: "4px 10px", borderRadius: 20 }}>Hire me</div>
       </div>
-      <div style={{ padding: 16 }}>
-        <div style={{ marginBottom: 16 }}>
-          <div style={{ color: "#555", fontSize: 8, letterSpacing: "0.2em", marginBottom: 4 }}>CREATIVE DIRECTOR</div>
-          <div style={{ fontSize: 22, fontWeight: 900, color: "#fff", lineHeight: 1, marginBottom: 2 }}>Turning</div>
-          <div style={{ fontSize: 22, fontWeight: 900, lineHeight: 1, background: "linear-gradient(90deg, #FF6B9D, #C850C0, #7C3AED)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Ideas</div>
-          <div style={{ fontSize: 22, fontWeight: 900, color: "#fff", lineHeight: 1 }}>Into Art.</div>
+
+      {/* HERO */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "20px 18px 0" }}>
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 12 }}>
+            <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80" }} />
+            <span style={{ color: "#555", fontSize: 8, letterSpacing: "0.15em", textTransform: "uppercase" }}>Available for work</span>
+          </div>
+
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ fontSize: 9, color: "#555", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 6 }}>Creative Director & Developer</div>
+            <div style={{ lineHeight: 1.05, marginBottom: 4 }}>
+              <span style={{ fontSize: 28, fontWeight: 900, color: "#fff", fontFamily: "serif", fontStyle: "italic", letterSpacing: -1 }}>Turning Ideas</span>
+            </div>
+            <div style={{ fontSize: 28, fontWeight: 900, fontFamily: "serif", fontStyle: "italic", letterSpacing: -1, background: "linear-gradient(90deg,#FF6B9D,#C850C0,#7C3AED)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: 1.05 }}>Into Art.</div>
+          </div>
+
+          <p style={{ color: "#555", fontSize: 9, lineHeight: 1.7, maxWidth: 200, margin: "0 0 16px" }}>
+            Brand identity, UI/UX design, and web development — crafted with intention and built to last.
+          </p>
+
+          <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+            <div style={{ background: "#fff", color: "#000", fontSize: 8, fontWeight: 700, padding: "6px 14px", borderRadius: 20 }}>View Work →</div>
+            <div style={{ border: "1px solid #333", color: "#aaa", fontSize: 8, fontWeight: 600, padding: "6px 14px", borderRadius: 20 }}>Get in touch</div>
+          </div>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 5 }}>
-          {[
-            { label: "BRANDING", color: "#FF6B9D", h: 70 },
-            { label: "UI/UX", color: "#7C3AED", h: 55 },
-            { label: "MOTION", color: "#06B6D4", h: 55 },
-            { label: "WEB", color: "#F59E0B", h: 70 },
-          ].map(item => (
-            <div key={item.label} style={{ background: "#111", borderRadius: 8, height: item.h, display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: 8, position: "relative", overflow: "hidden", border: "1px solid #222" }}>
-              <div style={{ position: "absolute", top: 10, right: 10, width: 20, height: 20, borderRadius: "50%", background: item.color, opacity: 0.6 }} />
-              <div style={{ fontSize: 8, fontWeight: 700, color: "#fff", letterSpacing: "0.12em" }}>{item.label}</div>
+
+        {/* WORK GRID */}
+        <div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+            <span style={{ color: "#555", fontSize: 8, letterSpacing: "0.14em", textTransform: "uppercase" }}>Selected Work</span>
+            <span style={{ color: "#555", fontSize: 8 }}>04 Projects</span>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 5 }}>
+            {[
+              { label: "BRANDING", sub: "2024", color: "#FF6B9D", bg: "#1a0a10" },
+              { label: "UI/UX", sub: "2024", color: "#7C3AED", bg: "#100a1a" },
+              { label: "MOTION", sub: "2023", color: "#06B6D4", bg: "#0a1318" },
+              { label: "WEB DEV", sub: "2023", color: "#F59E0B", bg: "#1a1200" },
+            ].map(item => (
+              <div key={item.label} style={{ background: item.bg, borderRadius: 8, padding: "10px 10px 8px", border: `1px solid ${item.color}22`, position: "relative", overflow: "hidden" }}>
+                <div style={{ position: "absolute", top: -10, right: -10, width: 40, height: 40, borderRadius: "50%", background: item.color, opacity: 0.12 }} />
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
+                  <div style={{ width: 18, height: 18, borderRadius: 4, border: `1px solid ${item.color}55`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ width: 6, height: 6, borderRadius: 1, background: item.color }} />
+                  </div>
+                  <span style={{ color: "#444", fontSize: 7 }}>↗</span>
+                </div>
+                <div style={{ fontSize: 8, fontWeight: 800, color: "#fff", letterSpacing: "0.1em" }}>{item.label}</div>
+                <div style={{ fontSize: 7, color: "#444", marginTop: 1 }}>{item.sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* BOTTOM STATS */}
+        <div style={{ display: "flex", justifyContent: "space-between", borderTop: "1px solid #1a1a1a", padding: "10px 0", marginTop: 8 }}>
+          {[["50+", "Projects"], ["4yr", "Experience"], ["98%", "Satisfaction"]].map(([num, lbl]) => (
+            <div key={lbl} style={{ textAlign: "center" }}>
+              <div style={{ color: "#fff", fontWeight: 700, fontSize: 11, fontFamily: "serif", fontStyle: "italic" }}>{num}</div>
+              <div style={{ color: "#444", fontSize: 7, letterSpacing: "0.08em" }}>{lbl}</div>
             </div>
           ))}
         </div>
@@ -297,21 +226,21 @@ function PortfolioMockup() {
 const PROJECTS = [
   {
     num: "01",
-    title: "BLOOM SHOP",
+    title: "PERFUME SHOP",
     category: "이커머스 · 쇼핑몰",
-    desc: "패션 브랜드의 온라인 쇼핑몰 풀스택 구현. 상품 관리, 카트, 결제 흐름을 React + Firebase로 제작했습니다.",
+    desc: "퍼퓸 브랜드의 온라인 쇼핑몰 풀스택 구현. 상품 관리, 카트, 결제 흐름을 React + Firebase로 제작했습니다.",
     tags: ["React", "Firebase", "Styled-components"],
     accent: "#FF6B9D",
-    Mockup: ShopMockup,
+    Mockup: () => <ImageMockup src="/project1.png" />,
   },
   {
     num: "02",
     title: "ANALYTICS PRO",
     category: "SaaS · 대시보드",
-    desc: "실시간 데이터 시각화 대시보드. 복잡한 차트와 KPI 패널을 직관적인 UI로 구현한 B2B 서비스입니다.",
+    desc: "실시간 데이터 시각화 대시보드. 복잡한 차트와 패널을 직관적인 UI로 구현한 B2B 서비스입니다.",
     tags: ["Next.js", "TypeScript", "WebSocket"],
     accent: "#7C3AED",
-    Mockup: DashboardMockup,
+    Mockup: () => <ImageMockup src="/project2.png" />,
   },
   {
     num: "03",
@@ -320,7 +249,7 @@ const PROJECTS = [
     desc: "친환경 숙소 예약 플랫폼. 지도 연동, 실시간 예약, 리뷰 시스템을 포함한 마켓플레이스입니다.",
     tags: ["Vue.js", "Node.js", "PostgreSQL"],
     accent: "#059669",
-    Mockup: BookingMockup,
+    Mockup: () => <ImageMockup src="/project3.png" />,
   },
   {
     num: "04",
@@ -329,7 +258,7 @@ const PROJECTS = [
     desc: "크리에이티브 디렉터를 위한 개인 포트폴리오 사이트. 작업물의 분위기를 살린 다크 무드 디자인입니다.",
     tags: ["React", "GSAP", "Three.js"],
     accent: "#FF6B9D",
-    Mockup: PortfolioMockup,
+    Mockup: PortfolioMockup, // 04번은 이미지 없으므로 기존 유지 (필요시 project4.png로 교체)
   },
 ];
 
