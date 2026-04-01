@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ':*)",
+      "Bash(python3)",
+      "Bash(python3 -c \"import re; content=open\\('src/App.tsx','r',encoding='utf-8'\\).read\\(\\); new=re.sub\\(r'[ \\\\t]*<style>\\\\{\\\\x60[\\\\s\\\\S]*?\\\\x60\\\\}</style>\\\\n?', '\\\\n', content\\); open\\('src/App.tsx','w',encoding='utf-8'\\).write\\(new\\); print\\('done'\\)\")",
+      "Bash(python3 -c \"import re; content=open\\('src/App.tsx','r',encoding='utf-8'\\).read\\(\\); new=re.sub\\(r'[ \\\\t]*<style>\\\\{.[\\\\s\\\\S]*?.\\\\}</style>\\\\n?', '\\\\n', content, flags=re.DOTALL\\); open\\('src/App.tsx','w',encoding='utf-8'\\).write\\(new\\); print\\('done'\\)\")",
+      "Bash(node -e \"const fs=require\\('fs'\\); const c=fs.readFileSync\\('src/App.tsx','utf8'\\); const n=c.replace\\(/[ \\\\t]*<style>\\\\{[\\\\x60][^]*?[\\\\x60]\\\\}<\\\\/style>\\\\n?/, '\\\\n'\\); fs.writeFileSync\\('src/App.tsx',n,'utf8'\\); console.log\\('done'\\);\")",
+      "Bash(node -e \"const c=require\\('fs'\\).readFileSync\\('src/App.tsx','utf8'\\); const checks = [\\\\\"import './portfolio.css'\\\\\", 'autoPlayRef', 'startAutoPlay', 'proj-progress', 'proj-progress-dot', 'proj-progress-fill']; checks.forEach\\(s => console.log\\(s + ':', c.includes\\(s\\) ? 'OK' : 'MISSING'\\)\\); console.log\\('<style>:', c.includes\\('<style>'\\) ? 'PRESENT \\(ERROR\\)' : 'REMOVED OK'\\);\")",
+      "Bash(node -e \"const c=require\\('fs'\\).readFileSync\\('src/portfolio.css','utf8'\\); const checks = ['proj-progress', 'proj-progress-dot', 'proj-progress-fill', '--pink']; checks.forEach\\(s => console.log\\(s + ':', c.includes\\(s\\) ? 'OK' : 'MISSING'\\)\\);\")"
+    ]
+  }
+}
