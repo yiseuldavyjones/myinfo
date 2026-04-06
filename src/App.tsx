@@ -507,7 +507,7 @@ export default function App() {
       <ReviewSection />
 
       {/* ─── CONTACT ─── */}
-      <section id="contact">
+      {/* <section id="contact">
         <FadeSection>
           <p className="section-label">Contact</p>
           <h2>프로젝트 이야기를<br /><em>시작해봐요</em></h2>
@@ -529,7 +529,7 @@ export default function App() {
             <p className="contact-note">평균 응답시간 · 24시간 이내</p>
           </div>
         </FadeSection>
-      </section>
+      </section> */}
 
       <footer>
         <span className="footer-logo">YS Lab</span>
