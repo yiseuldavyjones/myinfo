@@ -111,125 +111,57 @@ function CountUp({ end, suffix = "" }: { end: number; suffix?: string }) {
   return <span ref={ref}>{count}{suffix}</span>;
 }
 
-/* ─── 프로젝트 가짜 목업 SVG 컴포넌트 ─── */
-function MockupBrowser({ children, accent }: { children: React.ReactNode; accent: string }) {
-  return (
-    <div className="mockup-browser">
-      <div className="mockup-bar" style={{ background: accent }}>
-        <span className="dot" style={{ background: "#ff6b6b" }} />
-        <span className="dot" style={{ background: "#ffd93d" }} />
-        <span className="dot" style={{ background: "#6bcb77" }} />
-        <div className="mockup-url">
-          <span>🔒 yslab.dev/project</span>
-        </div>
-      </div>
-      <div className="mockup-screen">{children}</div>
-    </div>
-  );
-}
+/* ─── 프로젝트 캐러셀 ─── */
+const PROJECT_IMAGES = Array.from({ length: 10 }, (_, i) => `/${String(i + 1).padStart(3, "0")}.png`);
 
-/* ─── 이미지 목업 ─── */
-function ImageMockup({ src, fallback }: { src: string; fallback?: React.ReactNode }) {
-  const [error, setError] = useState(false);
-  if (error && fallback) return <>{fallback}</>;
-  return (
-    <img
-      src={src}
-      alt="project screenshot"
-      onError={() => setError(true)}
-      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }}
-    />
-  );
-}
-
-/* ─── 이미지 캐러셀 목업 ─── */
-function CarouselMockup({ images, fit = "cover", bg = "#000" }: { images: string[]; fit?: "cover" | "contain"; bg?: string }) {
+function ProjectsCarousel() {
   const [current, setCurrent] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  useEffect(() => {
+  const startAuto = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
-      setCurrent(prev => (prev + 1) % images.length);
-    }, 2000);
+      setCurrent(prev => (prev + 1) % PROJECT_IMAGES.length);
+    }, 1500);
+  };
+
+  useEffect(() => {
+    startAuto();
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [images.length]);
+  }, []);
+
+  const go = (dir: 1 | -1) => {
+    setCurrent(prev => (prev + dir + PROJECT_IMAGES.length) % PROJECT_IMAGES.length);
+    startAuto();
+  };
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", background: bg }}>
-      {images.map((src, i) => (
-        <img
-          key={src}
-          src={src}
-          alt={`screenshot ${i + 1}`}
-          style={{
-            position: "absolute", inset: 0, width: "100%", height: "100%",
-            objectFit: fit, objectPosition: "top",
-            opacity: i === current ? 1 : 0,
-            transition: "opacity 0.6s ease",
-          }}
-        />
-      ))}
-      <div style={{ position: "absolute", bottom: 8, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 5 }}>
-        {images.map((_, i) => (
-          <div
+    <div className="proj-carousel-wrap">
+      <div className="proj-carousel-stage">
+        {PROJECT_IMAGES.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt={`프로젝트 ${i + 1}`}
+            className={`proj-carousel-img${i === current ? " active" : ""}`}
+          />
+        ))}
+        <button className="proj-carousel-btn prev" onClick={() => go(-1)}>‹</button>
+        <button className="proj-carousel-btn next" onClick={() => go(1)}>›</button>
+        <div className="proj-carousel-counter">{current + 1} / {PROJECT_IMAGES.length}</div>
+      </div>
+      <div className="proj-carousel-dots">
+        {PROJECT_IMAGES.map((_, i) => (
+          <button
             key={i}
-            onClick={() => setCurrent(i)}
-            style={{ width: i === current ? 16 : 6, height: 6, borderRadius: 3, background: i === current ? "#fff" : "rgba(255,255,255,0.5)", transition: "all 0.3s", cursor: "pointer" }}
+            className={`proj-carousel-dot${i === current ? " active" : ""}`}
+            onClick={() => { setCurrent(i); startAuto(); }}
           />
         ))}
       </div>
     </div>
   );
 }
-
-
-const PROJECTS = [
-  {
-    num: "01",
-    title: "PERFUME SHOP",
-    category: "이커머스 · 쇼핑몰",
-    desc: "퍼퓸 브랜드의 온라인 쇼핑몰 풀스택 구현. 상품 관리, 카트, 결제 흐름을 React + Firebase로 제작했습니다.",
-    tags: ["React", "Firebase", "Styled-components"],
-    accent: "#FF6B9D",
-    Mockup: () => <ImageMockup src="/project1.png" />,
-  },
-  {
-    num: "02",
-    title: "ANALYTICS PRO",
-    category: "SaaS · 대시보드",
-    desc: "실시간 데이터 시각화 대시보드. 복잡한 차트와 패널을 직관적인 UI로 구현한 B2B 서비스입니다.",
-    tags: ["Next.js", "TypeScript", "WebSocket"],
-    accent: "#7C3AED",
-    Mockup: () => <ImageMockup src="/project2.png" />,
-  },
-  {
-    num: "03",
-    title: "GREENSTAY",
-    category: "플랫폼 · 예약 서비스",
-    desc: "친환경 숙소 예약 플랫폼. 지도 연동, 실시간 예약, 리뷰 시스템을 포함한 마켓플레이스입니다.",
-    tags: ["Vue.js", "Node.js", "PostgreSQL"],
-    accent: "#059669",
-    Mockup: () => <ImageMockup src="/project3.png" />,
-  },
-  {
-    num: "05",
-    title: "GREENY",
-    category: "모바일 앱 · 환경 플랫폼",
-    desc: "친환경 생활 실천을 게임처럼 즐기는 환경 앱. 일일 미션, 캠페인 참여, 씨앗 리워드 시스템을 React Native로 구현했습니다.",
-    tags: ["React Native", "TypeScript", "Firebase"],
-    accent: "#4caf50",
-    Mockup: () => <CarouselMockup images={["/project5-1.jpg", "/project5-2.jpg", "/project5-3.jpg", "/project5-4.jpg"]} fit="contain" bg="#f5f9f0" />,
-  },
-  {
-    num: "06",
-    title: "NEXUS MES",
-    category: "B2B · 제조 실행 시스템",
-    desc: "공장 생산 라인을 실시간 모니터링하는 MES 대시보드. OEE 추이, 알람 센터, 작업지시 관리 등을 포함한 산업용 솔루션입니다.",
-    tags: ["React", "WebSocket", "Recharts"],
-    accent: "#3b82f6",
-    Mockup: () => <CarouselMockup images={["/project6-1.jpg", "/project6-2.jpg", "/project6-3.jpg", "/project6-4.jpg"]} />,
-  },
-];
 
 /* ─── 후기 ─── */
 const REVIEWS = [
@@ -370,8 +302,6 @@ export default function App() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [heroLoaded, setHeroLoaded] = useState(false);
-  const [activeProject, setActiveProject] = useState(0);
-  const autoPlayRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -384,24 +314,10 @@ export default function App() {
     return () => clearTimeout(t);
   }, []);
 
-  const startAutoPlay = () => {
-    if (autoPlayRef.current) clearInterval(autoPlayRef.current);
-    autoPlayRef.current = setInterval(() => {
-      setActiveProject(prev => (prev + 1) % PROJECTS.length);
-    }, 3500);
-  };
-
-  useEffect(() => {
-    startAutoPlay();
-    return () => { if (autoPlayRef.current) clearInterval(autoPlayRef.current); };
-  }, []);
-
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setMenuOpen(false);
   };
-
-  const proj = PROJECTS[activeProject];
 
   return (
     <div className="page">
@@ -514,50 +430,11 @@ export default function App() {
         <div className="projects-inner">
           <FadeSection>
             <p className="section-label" style={{ color: "var(--pink)" }}>Projects</p>
-          </FadeSection>
-          <FadeSection>
-            <div className="projects-layout">
-              <div className="project-list">
-                {PROJECTS.map((p, i) => (
-                  <div
-                    key={p.num}
-                    className={`project-list-item${activeProject === i ? " active" : ""}`}
-                    onClick={() => { setActiveProject(i); startAutoPlay(); }}
-                  >
-                    <div className="proj-num" style={{ color: activeProject === i ? p.accent : "rgba(255,255,255,0.2)" }}>
-                      {p.num}
-                    </div>
-                    <div className="proj-name">{p.title}</div>
-                    <div className="proj-category">{p.category}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="project-detail">
-                <div className="project-mockup-wrap" style={{ boxShadow: `0 32px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05)` }}>
-                  <MockupBrowser accent={proj.accent}>
-                    <proj.Mockup />
-                  </MockupBrowser>
-                </div>
-                <div className="proj-detail-title">{proj.title}</div>
-                <div className="proj-detail-desc">{proj.desc}</div>
-                <div className="proj-tags">
-                  {proj.tags.map(t => (
-                    <span key={t} className="proj-tag" style={{ borderColor: `${proj.accent}30`, color: proj.accent }}>{t}</span>
-                  ))}
-                </div>
-                <div className="proj-progress">
-                  {PROJECTS.map((_, i) => (
-                    <div
-                      key={i}
-                      className={`proj-progress-dot${activeProject === i ? " active" : ""}`}
-                      onClick={() => { setActiveProject(i); startAutoPlay(); }}
-                    >
-                      <div className="proj-progress-fill" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <h2>함께 만든<br /><em>프로젝트들</em></h2>
+            <p className="desc" style={{ marginBottom: 40 }}>
+              실제로 진행한 프로젝트 작업물 모음입니다.
+            </p>
+            <ProjectsCarousel />
           </FadeSection>
         </div>
       </div>
