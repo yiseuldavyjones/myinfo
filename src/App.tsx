@@ -368,9 +368,8 @@ export default function App() {
           <div className={`hero-row${heroLoaded ? " loaded" : ""}`}>
             <div className="hero-divider" />
             <p className="hero-sub">
-              디자이너 출신 프론트엔드 개발자.<br />
-              기획 의도가 화면에 그대로 살아나는<br />
-              웹·앱 서비스를 함께 만들어드립니다.
+              아이디어를 서비스로 만드는 가장 빠른 방법.<br />
+              기획, 디자인, 개발을 한 사람이 합니다.
             </p>
             <div className="hero-actions">
               <button className="btn-primary" onClick={() => scrollTo("services")}>
@@ -408,9 +407,9 @@ export default function App() {
           <h2>이런 것을<br /><em>도와드릴 수 있어요</em></h2>
           <div className="services-grid">
             {[
-              { num: "01", icon: "🎨", bg: "#FFF0F5", title: "웹사이트 제작", desc: "기업 홈페이지, 랜딩페이지 제작. 브랜드 아이덴티티에 맞는 디자인과 개발을 함께 진행합니다.", tag: "Landing · Corporate" },
-              { num: "02", icon: "📱", bg: "#F0F0FF", title: "앱 UI 구현",   desc: "모바일 앱 인터페이스 구현. 디자이너 출신 개발자로서 픽셀 퍼펙트한 구현을 목표합니다.", tag: "iOS · Android · React Native" },
-              { num: "03", icon: "⚡", bg: "#F0FFF8", title: "프론트엔드 개발", desc: "React 기반 웹 서비스 개발. Firebase, 상태관리, API 연동까지 풀스택에 가까운 프론트 개발.", tag: "React · Next.js · Firebase" },
+              { num: "01", icon: "🛍️", bg: "#FFF0F5", title: "쇼핑몰 제작 · 커스터마이징", desc: "Cafe24, 고도몰 기반 쇼핑몰 제작 및 템플릿 커스터마이징. 브랜드에 맞는 디자인으로 직접 수정이 어려운 부분도 깔끔하게 구현합니다.", tag: "Cafe24 · 고도몰 · 템플릿 커스텀" },
+              { num: "02", icon: "🎨", bg: "#F0F0FF", title: "웹사이트 · 랜딩페이지", desc: "기업 홈페이지, 브랜드 소개, 이벤트 랜딩페이지 제작. 디자인과 개발을 함께 진행해 퀄리티 높은 결과물을 빠르게 만들어드립니다.", tag: "Landing · Corporate · Responsive" },
+              { num: "03", icon: "⚡", bg: "#F0FFF8", title: "서비스 개발", desc: "기획부터 배포까지 한 번에. UI 구현은 물론 백엔드 연동, 데이터베이스 설계, 서버 배포까지 제품 전체를 함께 만들어드립니다.", tag: "React · Next.js · Node.js · Firebase" },
             ].map((s) => (
               <div className="service-card" key={s.num}>
                 <p className="service-num">{s.num}</p>
@@ -446,13 +445,13 @@ export default function App() {
               <div>
                 <h2>디자인과 개발,<br /><em>둘 다 합니다</em></h2>
                 <p className="desc">
-                  디자이너로 커리어를 시작해 현재 프론트엔드 개발자로 일하고 있습니다.
-                  디자인과 개발을 모두 이해하는 경험을 바탕으로 UI 완성도를 높이고
-                  사용자 경험을 개선하는 프론트엔드 개발을 진행하고 있습니다.
+                  기획, 디자인, 개발을 혼자서 처음부터 끝까지 진행합니다.
+                  아이디어 단계에서 구조를 잡고, 직접 디자인하고, 개발해서 배포까지.
+                  한 사람이 전체 흐름을 책임지기 때문에 빠르고 일관성 있는 결과물이 나옵니다.
                 </p>
                 <p className="desc" style={{ marginTop: 20 }}>
-                  디자이너와 개발자 사이의 간극을 좁히고, 기획 의도가 화면에 그대로
-                  살아나는 결과물을 만드는 것을 중요하게 생각합니다.
+                  Cafe24·고도몰 쇼핑몰 커스터마이징부터 React 기반 웹 서비스, 랜딩페이지까지.
+                  규모에 상관없이 클라이언트가 원하는 것을 가장 효율적으로 만들어드립니다.
                 </p>
                 <div className="about-chips">
                   {["UI/UX 디자인", "React 개발", "Firebase", "반응형 웹", "Figma", "협업 커뮤니케이션"].map(c => (
