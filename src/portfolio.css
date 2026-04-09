@@ -23,9 +23,16 @@
 
 body {
   margin: 0;
+  padding: 0;
   font-family: 'Pretendard', 'Pretendard Fallback', 'Apple SD Gothic Neo', sans-serif;
   background: var(--bg);
   color: var(--ink);
+  overflow-x: hidden;
+}
+
+.page {
+  width: 100%;
+  min-height: 100svh;
   overflow-x: hidden;
 }
 
@@ -277,8 +284,12 @@ section h2 em { font-style: normal; color: var(--blue); }
 
 /* ── ABOUT / QNA 풀폭 섹션 ── */
 .about-section-outer, .qna-section-outer {
-  background: #fff; width: 100%; margin: 0;
-  padding: 56px 0; scroll-margin-top: 60px;
+  background: #fff;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 56px 0;
+  scroll-margin-top: 60px;
 }
 .about-section-inner, .qna-section-inner {
   max-width: 1200px; margin: 0 auto; padding: 0 20px;
@@ -606,7 +617,7 @@ footer {
   .desc { max-width: 540px; }
 
   /* ABOUT/QNA */
-  .about-section-outer, .qna-section-outer { padding: 96px 0; }
+  .about-section-outer, .qna-section-outer { padding: 96px 0; max-width: 100%; }
   .about-section-inner, .qna-section-inner { padding: 0 48px; }
   .about-layout { flex-direction: row; gap: 64px; align-items: center; }
   .about-visual { width: auto; flex: 1; aspect-ratio: 4/5; border-radius: 16px; }
