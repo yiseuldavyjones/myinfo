@@ -112,7 +112,7 @@ function CountUp({ end, suffix = "" }: { end: number; suffix?: string }) {
 }
 
 /* ─── 프로젝트 캐러셀 ─── */
-const PROJECT_IMAGES = Array.from({ length: 10 }, (_, i) => `/${String(i + 1).padStart(3, "0")}.png`);
+const PROJECT_IMAGES = Array.from({ length: 8 }, (_, i) => `/${String(i + 1).padStart(3, "0")}.png`);
 
 function ProjectsCarousel() {
   const [current, setCurrent] = useState(0);
@@ -204,7 +204,12 @@ function ReviewSection() {
           {REVIEWS.map((r, i) => (
             <div className="review-card" key={i}>
               <div className="review-top">
-                <div className="review-avatar">{r.avatar}</div>
+                <div className="review-avatar">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="8" r="4" fill="currentColor" opacity="0.7"/>
+                    <path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" opacity="0.5"/>
+                  </svg>
+                </div>
                 <div>
                   <div className="review-name">{r.name}</div>
                   <div className="review-role">{r.role}</div>
@@ -273,22 +278,22 @@ function ProcessSection() {
           처음 의뢰하시는 분도 걱정 없이 진행할 수 있도록<br />
           단계마다 꼼꼼하게 소통합니다.
         </p>
-        <div className="process-list">
+        <div className="process-stepper">
           {PROCESS_STEPS.map((step, i) => (
-            <div className="process-item" key={i}>
-              <div className="process-left">
-                <div className="process-icon-wrap">
-                  <span className="process-icon">{step.icon}</span>
-                  {i < PROCESS_STEPS.length - 1 && <div className="process-line" />}
+            <div className="process-step" key={i}>
+              <div className="process-step-left">
+                <div className="process-step-circle">
+                  <span className="process-step-icon">{step.icon}</span>
                 </div>
+                {i < PROCESS_STEPS.length - 1 && <div className="process-step-line" />}
               </div>
-              <div className="process-body">
-                <div className="process-header">
-                  <span className="process-num">{step.num}</span>
-                  <span className="process-title">{step.title}</span>
-                  <span className="process-duration">{step.duration}</span>
+              <div className="process-step-body">
+                <div className="process-step-header">
+                  <span className="process-step-num">{step.num}</span>
+                  <span className="process-step-title">{step.title}</span>
+                  <span className="process-step-dur">{step.duration}</span>
                 </div>
-                <p className="process-desc">{step.desc}</p>
+                <p className="process-step-desc">{step.desc}</p>
               </div>
             </div>
           ))}
