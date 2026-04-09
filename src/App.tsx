@@ -358,10 +358,6 @@ export default function App() {
         <div className="hero-watermark">YSLab</div>
 
         <div className="hero-content">
-          <div className={`hero-badge${heroLoaded ? " loaded" : ""}`}>
-            <span className="badge-dot" />
-            현재 프로젝트 수락 가능 ✦
-          </div>
           <p className={`hero-eyebrow${heroLoaded ? " loaded" : ""}`}>
             Fullstack Web Developer · Freelance
           </p>
@@ -377,12 +373,9 @@ export default function App() {
               웹·앱 서비스를 함께 만들어드립니다.
             </p>
             <div className="hero-actions">
-              <button className="btn-primary" onClick={() => scrollTo("contact")}>
-                프로젝트 문의하기 →
-              </button>
-              <span className="btn-ghost" onClick={() => scrollTo("services")}>
+              <button className="btn-primary" onClick={() => scrollTo("services")}>
                 서비스 살펴보기
-              </span>
+              </button>
             </div>
           </div>
         </div>
